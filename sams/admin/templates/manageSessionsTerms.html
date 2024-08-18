@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Sessions & Terms</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    >
+    <link href="../../static/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!--Main CSS File -->
+    <link href="../../static/css/public/dashboard.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="{{ url_for('admin.adminDashboard') }}" class="logo d-flex align-items-center">
+            <span class="d-none d-lg-block">SAMS</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+
+            <li class="nav-item d-block d-lg-none">
+                <a class="nav-link nav-icon search-bar-toggle " href="#">
+                    <i class="bi bi-search"></i>
+                </a>
+            </li><!-- End Search Icon-->
+
+
+            <li class="nav-item dropdown pe-3">
+
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <span class="d-none d-md-block dropdown-toggle ps-2">Welcome {{ current_user.fullname if current_user.is_authenticated else 'Guest'}}</span>
+                </a><!-- End Profile Iamge Icon -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>{{ current_user.fullname if current_user.is_authenticated else 'Guest'}}</h6>
+                        <span>Admin</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url_for('main.logout') }}">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Sign Out</span>
+                        </a>
+                    </li>
+
+                </ul><!-- End Profile Dropdown Items -->
+            </li><!-- End Profile Nav -->
+
+        </ul>
+    </nav><!-- End Icons Navigation -->
+
+</header><!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin.adminDashboard') }}">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
+        <li class="nav-heading">Pages</li>
+
+        <li class="nav-item">
+            <a class="nav-link  collapsed" href="{{ url_for('admin.manageClasses') }}">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>Manage Classes</span>
+            </a>
+        </li><!-- End F.A.Q Page Nav -->
+        <li class="nav-item">
+            <a class="nav-link  collapsed" href="{{ url_for('admin.manageClassArms') }}">
+                <i class="bi bi-diagram-3-fill"></i>
+                <span>Manage Class Arms</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('admin.manageTeachers') }}">
+                <i class="bi bi-person-lines-fill"></i>
+                <span>Manage Teachers</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('admin.manageStudents') }}">
+                <i class="bi bi-person-fill"></i>
+                <span>Manage Students</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('manage_sessions_terms') }}">
+                <i class="bi bi-calendar3"></i>
+                <span>Manage Session & Terms</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('main.logout') }}">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span>Logout</span>
+            </a>
+        </li><!-- End Login Page Nav -->
+    </ul>
+
+</aside><!-- End Sidebar-->
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Manage Sessions</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Sessions & Terms</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Create Session & Term</h5>
+                        <form method="POST" action="{{ url_for('manage_sessions_terms') }}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="sessionInput" class="form-label">Session:</label>
+                                        <input type="text" class="form-control" name="sessionInput" id="sessionInput"
+                                               placeholder="Enter Session (e.g., 2023/24)" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="termInput" class="form-label">Term:</label>
+                                        <input type="text" class="form-control" name="termInput" id="termInput"
+                                               placeholder="Enter Term (e.g., First, Second, Third)" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title">All Sessions</h5>
+                        <div class="row mb-4">
+                            <div class="col-lg-4 col-md-6">
+                                <label for="entriesSelect" class="form-label">Show entries:</label>
+                                <select class="form-select" id="entriesSelect">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-6 ms-md-4">
+                                <label for="searchClass" class="form-label">Search:</label>
+                                <input type="text" class="form-control" id="searchClass"
+                                       placeholder="Search by session">
+                            </div>
+                        </div>
+
+                        <table class="table table-borderless datatable">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Session</th>
+                                <th>Term</th>
+                                <th>Status</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for session in sessions %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ session.name }}</td>
+                                    <td>{{ session.term }}</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <a class="btn btn-danger" href="{{ url_for('admin.delete_session', session_id=session.id) }}">Delete</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>Student Attendance Management System</span></strong>. All Rights Reserved
+    </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="../../static/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="../../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/vendor/chart.js/chart.umd.js"></script>
+<script src="../../static/vendor/echarts/echarts.min.js"></script>
+<script src="../../static/vendor/simple-datatables/simple-datatables.js"></script>
+
+<!-- Main JS File -->
+<script src="../../static/js/main-dashboard.js"></script>
+<script>
+    function confirmDelete(sessionId) {
+        if (confirm('Are you sure you want to delete this session?')) {
+            var form = document.getElementById('deleteForm-' + sessionId);
+            form.submit();
+        }
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Create Account</title>
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../../static/css/public/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<main>
+    <div class="container">
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8 d-flex flex-column align-items-center justify-content-center">
+                        <div class="d-flex justify-content-center py-4">
+                            <a href="index.html" class="logo d-flex align-items-center w-auto">
+                                <img src="assets/img/logo.png" alt="">
+                                <span class="d-none d-lg-block">SAMS</span>
+                            </a>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
+                                    <p class="text-center small">Enter your personal details to create account</p>
+                                </div>
+                                <form class="row g-3 needs-validation" action="{{ url_for('main.signup') }}" method="POST">
+                                    {{ form.hidden_tag() }}
+                                    <div class="col-12">
+                                        {{ form.fullname.label(class="form-label") }}
+                                        {{ form.fullname(class="form-control", required=True) }}
+                                        {% if form.fullname.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.fullname.errors[0] }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12">
+                                        {{ form.email.label(class="form-label") }}
+                                        {{ form.email(class="form-control", required=True) }}
+                                        {% if form.email.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.email.errors[0] }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12">
+                                        {{ form.phone.label(class="form-label") }}
+                                        {{ form.phone(class="form-control", required=True) }}
+                                        {% if form.phone.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.phone.errors[0] }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12">
+                                        {{ form.username.label(class="form-label") }}
+                                        {{ form.username(class="form-control", required=True) }}
+                                        {% if form.username.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.username.errors[0] }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12">
+                                        {{ form.password.label(class="form-label") }}
+                                        {{ form.password(class="form-control", required=True) }}
+                                        {% if form.password.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.password.errors[0] }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12">
+                                        {{ form.confirm_password.label(class="form-label") }}
+                                        {{ form.confirm_password(class="form-control", required=True) }}
+                                        {% if form.confirm_password.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ form.confirm_password.errors[0] }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            {{ form.accept_terms.label(class="form-check-label") }}
+                                            {{ form.accept_terms(class="form-check-input", required=True) }}
+                                            {% if form.accept_terms.errors %}
+                                                <div class="invalid-feedback">
+                                                    {{ form.accept_terms.errors[0] }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary w-100" type="submit">{{ form.submit.label }}</button>
+                                    </div>
+                                    <div class="col-12">
+                                        <p class="small mb-0">Already have an account? <a href="{{ url_for('main.login') }}">Login</a></p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<script src="../../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>

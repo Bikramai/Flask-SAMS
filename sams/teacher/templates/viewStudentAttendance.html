@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Student Attendance</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    >
+    <link href="../../static/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!--Main CSS File -->
+    <link href="../../static/css/public/dashboard.css" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="{{ url_for('teacher.teacherDashboard') }}" class="logo d-flex align-items-center">
+            <span class="d-none d-lg-block">SAMS</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+
+            <li class="nav-item d-block d-lg-none">
+                <a class="nav-link nav-icon search-bar-toggle " href="#">
+                    <i class="bi bi-search"></i>
+                </a>
+            </li><!-- End Search Icon-->
+
+
+            <li class="nav-item dropdown pe-3">
+
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <span class="d-none d-md-block dropdown-toggle ps-2">Welcome {{ current_user.fullname if current_user.is_authenticated else 'Guest'}}</span>
+                </a><!-- End Profile Iamge Icon -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>{{ current_user.fullname if current_user.is_authenticated else 'Guest'}}</h6>
+                        <span>Teacher</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url_for('main.logout') }}">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Sign Out</span>
+                        </a>
+                    </li>
+
+                </ul><!-- End Profile Dropdown Items -->
+            </li><!-- End Profile Nav -->
+
+        </ul>
+    </nav><!-- End Icons Navigation -->
+
+</header><!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('teacher.teacherDashboard') }}">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
+        <li class="nav-heading">Pages</li>
+
+        <li class="nav-item">
+            <a class="nav-link  collapsed" href="{{ url_for('teacher.viewStudents') }}">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>All Students</span>
+            </a>
+        </li><!-- End F.A.Q Page Nav -->
+        <li class="nav-item">
+            <a class="nav-link  collapsed" href="{{ url_for('teacher.takeAttendance') }}">
+                <i class="bi bi-diagram-3-fill"></i>
+                <span>Take Attendance</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link  collapsed" href="{{ url_for('teacher.viewClassAttendance') }}">
+                <i class="bi bi-diagram-3-fill"></i>
+                <span>Class Attendance</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link  collapsed" href="{{ url_for('teacher.viewStudentAttendance') }}">
+                <i class="bi bi-diagram-3-fill"></i>
+                <span>Student Attendance</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('main.logout') }}">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span>Logout</span>
+            </a>
+        </li><!-- End Login Page Nav -->
+    </ul>
+
+</aside><!-- End Sidebar-->
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Manage Students</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Student Attendance</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Student Attendance</h5>
+                    <form action="{{ url_for('teacher.viewStudentAttendance') }}" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="studentName" class="form-label">Student Name:</label>
+                                <select class="form-control" id="studentName" name="student_name" required>
+                                    <option value="" disabled selected>Please select the student</option>
+                                    {% for id, name in student_options %}
+                                        <option value="{{ id }}">{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary mt-4">Show Attendance</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title">Student Attendance Records</h5>
+                        <table class="table table-borderless datatable">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Admission No</th>
+                                <th>Class</th>
+                                <th>Class Arm</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for record in student_records %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ record.student.user.fullname }}</td>
+                                    <td>{{ record.student.user.email }}</td>
+                                    <td>{{ record.student.admission_no }}</td>
+                                    <td>{{ record.student.class_.name }}</td>
+                                    <td>{{ record.student.class_arm.name }}</td>
+                                    <td>{{ record.date.strftime('%Y-%m-%d') }}</td>
+                                    <td><span
+                                            class="badge {{ 'bg-success' if record.status else 'bg-danger' }}">{{ 'Present' if record.status else 'Absent' }}</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>Student Attendance Management System</span></strong>. All Rights Reserved
+    </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="../../static/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="../../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/vendor/chart.js/chart.umd.js"></script>
+<script src="../../static/vendor/echarts/echarts.min.js"></script>
+<script src="../../static/vendor/simple-datatables/simple-datatables.js"></script>
+
+<!-- Main JS File -->
+<script src="../../static/js/main-dashboard.js"></script>
+
+<!-- All your HTML content goes here -->
+<!-- Place JavaScript at the bottom of the body -->
+<script>
+    function showDateInput(filterType) {
+        document.getElementById('singleDateInput').classList.add('d-none');
+        document.getElementById('dateRangeInput').classList.add('d-none');
+        if (filterType === 'single_date') {
+            document.getElementById('singleDateInput').classList.remove('d-none');
+        } else if (filterType === 'date_range') {
+            document.getElementById('dateRangeInput').classList.remove('d-none');
+        }
+    }
+</script>
+
+</body>
+</html>

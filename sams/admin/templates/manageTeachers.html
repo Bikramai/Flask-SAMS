@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Teachers</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    >
+    <link href="../../static/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!--Main CSS File -->
+    <link href="../../static/css/public/dashboard.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="{{ url_for('admin.adminDashboard') }}" class="logo d-flex align-items-center">
+            <span class="d-none d-lg-block">SAMS</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+
+            <li class="nav-item d-block d-lg-none">
+                <a class="nav-link nav-icon search-bar-toggle " href="#">
+                    <i class="bi bi-search"></i>
+                </a>
+            </li><!-- End Search Icon-->
+
+
+            <li class="nav-item dropdown pe-3">
+
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <span class="d-none d-md-block dropdown-toggle ps-2">Welcome {{ current_user.fullname if current_user.is_authenticated else 'Guest'}}</span>
+                </a><!-- End Profile Iamge Icon -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6>{{ current_user.fullname if current_user.is_authenticated else 'Guest'}}</h6>
+                        <span>Admin</span>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url_for('main.logout') }}">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Sign Out</span>
+                        </a>
+                    </li>
+
+                </ul><!-- End Profile Dropdown Items -->
+            </li><!-- End Profile Nav -->
+
+        </ul>
+    </nav><!-- End Icons Navigation -->
+
+</header><!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin.adminDashboard') }}">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
+        <li class="nav-heading">Pages</li>
+
+        <li class="nav-item">
+            <a class="nav-link  collapsed" href="{{ url_for('admin.manageClasses') }}">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>Manage Classes</span>
+            </a>
+        </li><!-- End F.A.Q Page Nav -->
+        <li class="nav-item">
+            <a class="nav-link  collapsed" href="{{ url_for('admin.manageClassArms') }}">
+                <i class="bi bi-diagram-3-fill"></i>
+                <span>Manage Class Arms</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('admin.manageTeachers') }}">
+                <i class="bi bi-person-lines-fill"></i>
+                <span>Manage Teachers</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('admin.manageStudents') }}">
+                <i class="bi bi-person-fill"></i>
+                <span>Manage Students</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('manage_sessions_terms') }}">
+                <i class="bi bi-calendar3"></i>
+                <span>Manage Session & Terms</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ url_for('main.logout') }}">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span>Logout</span>
+            </a>
+        </li><!-- End Login Page Nav -->
+    </ul>
+
+</aside><!-- End Sidebar-->
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Manage Teachers</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Manage Teachers</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row">
+                    <div class="col-12">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Add Teachers</h5>
+                        <form method="POST" action="{{ url_for('admin.manageTeachers') }}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="teacherName" class="form-label">Full Name:</label>
+                                        <input type="text" class="form-control" name="teacherName" id="teacherName"
+                                               placeholder="Enter full name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Username:</label>
+                                        <input type="text" class="form-control" name="username" id="username"
+                                               placeholder="Enter username" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email:</label>
+                                        <input type="email" class="form-control" name="email" id="email"
+                                               placeholder="Enter email" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password:</label>
+                                        <input type="password" class="form-control" name="password" id="password"
+                                               placeholder="Enter password" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">Phone No:</label>
+                                        <input type="text" class="form-control" name="phone" id="phone"
+                                               placeholder="Enter phone no" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="classSelect" class="form-label">Select class:</label>
+                                        <select class="form-select" name="classSelect" id="classSelect"
+                                                onchange="loadClassArms(this.value)" required>
+                                            <option selected>Choose...</option>
+                                            {% for cls in classes %}
+                                                <option value="{{ cls.id }}">{{ cls.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="classArmSelect" class="form-label">Select class arm:</label>
+                                        <select class="form-select" name="classArmSelect" id="classArmSelect" required>
+                                            <option selected>Choose class first...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary">Add Teacher</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="card recent-sales overflow-auto">
+                        <div class="card-body">
+                            <h5 class="card-title">All Teachers</h5>
+
+                            <table class="table table-borderless datatable" id="teacherTable">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Class</th>
+                                    <th>Class Arm</th>
+                                    <th>Date Created</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for teacher, user in teachers %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ user.fullname }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ teacher.phone }}</td>
+                                        <td>{{ teacher.class_.name }}</td>
+                                        <td>{{ teacher.class_arm.name }}</td>
+                                        <td>{{ teacher.date_created.strftime('%Y-%m-%d') }}</td>
+                                        <td>
+                                            <a class="btn btn-danger" href="{{ url_for('admin.delete_teacher', teacher_id=teacher.id) }}">Delete</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+</main>
+
+
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>Student Attendance Management System</span></strong>. All Rights Reserved
+    </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="../../static/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="../../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../../static/vendor/chart.js/chart.umd.js"></script>
+<script src="../../static/vendor/echarts/echarts.min.js"></script>
+<script src="../../static/vendor/simple-datatables/simple-datatables.js"></script>
+
+<!-- Main JS File -->
+<script src="../../static/js/main-dashboard.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+
+<!-- At the end of the body, before your existing scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#teacherTable').DataTable({
+            "pagingType": "full_numbers",  // Enable pagination
+            "pageLength": 10,  // Set default number of rows to display
+            "lengthMenu": [[5, 10, 50, 100, -1], [5, 10, 50, 100, "All"]],  // Dropdown for selecting number of rows
+            "searching": true  // Enable the search function
+        });
+    });
+</script>
+
+<script>
+    function deleteTeacher(teacherId) {
+        if (confirm('Are you sure you want to delete this teacher?')) {
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = `/admin/delete_teacher/${teacherId}`;
+
+            // CSRF token
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrf_token';
+            csrfToken.value = '{{ csrf_token }}'; // Fetch this token dynamically or set in a variable accessible here
+            form.appendChild(csrfToken);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+</script>
+
+
+<!-- All your HTML content goes here -->
+<!-- Place JavaScript at the bottom of the body -->
+<script>
+    function loadClassArms(classId) {
+        fetch(`/get_class_arms/${classId}`)
+            .then(response => response.json())
+            .then(data => {
+                let classArmSelect = document.getElementById('classArmSelect');
+                classArmSelect.innerHTML = '<option selected>Choose...</option>';
+                data.forEach(class_arm => {
+                    let option = new Option(class_arm.name, class_arm.id);
+                    classArmSelect.add(option);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>
